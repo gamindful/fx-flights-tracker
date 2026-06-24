@@ -1,0 +1,167 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family:'Inter',system-ui,sans-serif; background:#030712; color:#f1f5f9; min-height:100vh; }
+
+header {
+  background:#0a0f1e; border-bottom:1px solid #1e293b;
+  padding:12px 24px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+header h1 { font-size:1.1rem; font-weight:700; color:#f8fafc; }
+header h1 span { font-size:.75rem; font-weight:400; color:#64748b; margin-left:8px; }
+.header-right { margin-left:auto; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+#last-updated { font-size:.75rem; color:#64748b; }
+#last-updated strong { color:#94a3b8; }
+select#refresh-interval {
+  background:#1e293b; border:1px solid #334155; color:#e2e8f0;
+  padding:5px 8px; border-radius:6px; font-size:.78rem; cursor:pointer;
+}
+button#refresh-btn {
+  background:#4f46e5; border:none; color:#fff; padding:6px 14px;
+  border-radius:6px; font-size:.78rem; cursor:pointer; display:flex; align-items:center; gap:6px;
+}
+button#refresh-btn:hover { background:#4338ca; }
+
+main {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:16px; padding:16px; max-width:1600px; margin:0 auto;
+}
+@media(max-width:900px){ main{grid-template-columns:1fr;} }
+
+.card {
+  background:#0f172a; border:1px solid #1e293b; border-radius:12px; padding:20px;
+}
+.card-title {
+  font-size:.9rem; font-weight:600; color:#94a3b8;
+  text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px;
+}
+.card-subtitle { font-size:.72rem; color:#475569; margin-bottom:16px; }
+
+/* Rate banner */
+.rate-banner { display:flex; align-items:baseline; gap:12px; margin-bottom:4px; }
+.rate-value { font-size:2.8rem; font-weight:800; color:#f1f5f9; letter-spacing:-1px; }
+.rate-pair { font-size:.75rem; color:#64748b; font-weight:500; }
+.rate-change { font-size:.9rem; font-weight:600; }
+.rate-change.up { color:#22c55e; }
+.rate-change.down { color:#ef4444; }
+
+/* Charts */
+canvas { display:block; }
+#forecast-chart { height:300px !important; }
+#price-chart { height:260px !important; cursor:pointer; }
+
+.chart-legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; font-size:.72rem; color:#64748b; }
+.chart-legend span { display:flex; align-items:center; gap:5px; }
+.legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0; }
+.legend-line { width:18px; height:3px; border-radius:2px; display:inline-block; flex-shrink:0; }
+
+/* Banks table */
+.banks-table { width:100%; border-collapse:collapse; margin-top:8px; font-size:.8rem; }
+.banks-table th { color:#64748b; font-weight:500; text-align:right; padding:4px 8px; font-size:.72rem; }
+.banks-table th:first-child { text-align:left; }
+.banks-table td { padding:6px 8px; border-bottom:1px solid #1e293b; text-align:right; color:#cbd5e1; }
+.banks-table td:first-child { text-align:left; }
+.banks-table tr:last-child td { border-bottom:none; }
+.banks-table tr.best-rate td { color:#22c55e; }
+.star-badge { color:#fbbf24; margin-right:4px; }
+
+/* Dest tabs */
+.dest-tabs { display:flex; gap:6px; margin-bottom:12px; }
+.dest-tab {
+  padding:6px 14px; border-radius:6px; border:1px solid #334155;
+  background:transparent; color:#94a3b8; font-size:.82rem; font-weight:600;
+  cursor:pointer; transition:all .15s;
+}
+.dest-tab:hover { border-color:#6366f1; color:#c7d2fe; }
+.dest-tab.active { background:#312e81; border-color:#6366f1; color:#e0e7ff; }
+
+/* Airlines */
+input[type="date"]#flight-date {
+  background:#1e293b; border:1px solid #334155; color:#e2e8f0;
+  padding:5px 10px; border-radius:6px; font-size:.82rem; cursor:pointer;
+}
+.date-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.date-row label { font-size:.78rem; color:#64748b; }
+.source-badge { font-size:.68rem; padding:2px 7px; border-radius:4px; font-weight:600; text-transform:uppercase; }
+.source-badge.live    { background:#052e16; color:#4ade80; border:1px solid #166534; }
+.source-badge.estimate { background:#1c1917; color:#a8a29e; border:1px solid #44403c; }
+.airline-simple-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #1e293b; }
+.airline-simple-row:last-child { border-bottom:none; }
+.rank-badge {
+  width:26px; height:26px; border-radius:50%; background:#1e293b; color:#94a3b8;
+  font-size:.68rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.rank-badge.best { background:#052e16; color:#4ade80; border:1px solid #166534; }
+.airline-flag { font-size:1.1rem; flex-shrink:0; }
+.airline-info { flex:1; min-width:0; }
+.airline-name { font-size:.85rem; font-weight:600; color:#e2e8f0; }
+.airline-code { font-size:.72rem; color:#64748b; margin-left:4px; }
+.airline-via { font-size:.72rem; color:#475569; }
+.price-pill { font-size:.85rem; font-weight:700; padding:4px 10px; border-radius:6px; flex-shrink:0; }
+.price-best   { background:#052e16; color:#4ade80; border:1px solid #166534; }
+.price-normal { background:#172554; color:#93c5fd; border:1px solid #1e40af; }
+
+/* ── Rentals map ─────────────────────────────────────────────────────────── */
+#rentals-map {
+  height: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid #1e293b;
+}
+
+/* Override Leaflet controls for dark theme */
+.leaflet-control-zoom a { background:#1e293b !important; color:#94a3b8 !important; border-color:#334155 !important; }
+.leaflet-control-zoom a:hover { background:#334155 !important; color:#f1f5f9 !important; }
+.leaflet-control-attribution { background:rgba(15,23,42,.8) !important; color:#475569 !important; font-size:.65rem !important; }
+.leaflet-control-attribution a { color:#6366f1 !important; }
+.leaflet-popup-content-wrapper { background:#1e293b; border:1px solid #334155; border-radius:8px; box-shadow:0 4px 16px rgba(0,0,0,.5); }
+.leaflet-popup-tip { background:#1e293b; }
+.leaflet-popup-content { margin:10px 14px; color:#e2e8f0; }
+
+/* Rental filter tabs */
+.rental-filters { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+.rental-filter-btn {
+  padding:4px 12px; border-radius:20px; border:1px solid #334155;
+  background:transparent; color:#64748b; font-size:.75rem; font-weight:600; cursor:pointer; transition:all .15s;
+}
+.rental-filter-btn:hover { border-color:#6366f1; color:#c7d2fe; }
+.rental-filter-btn.active { background:#1e1b4b; border-color:#6366f1; color:#a5b4fc; }
+
+/* Rental price legend */
+.rental-legend { display:flex; gap:14px; margin-bottom:10px; flex-wrap:wrap; }
+.rental-legend span { display:flex; align-items:center; gap:5px; font-size:.72rem; color:#64748b; }
+.rental-legend-dot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+
+/* Rentals scrollable list */
+#rentals-list {
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+#rentals-list::-webkit-scrollbar { width:4px; }
+#rentals-list::-webkit-scrollbar-track { background:transparent; }
+#rentals-list::-webkit-scrollbar-thumb { background:#334155; border-radius:2px; }
+
+.rental-card {
+  border:1px solid #1e293b; border-radius:8px; padding:12px 14px;
+  margin-bottom:8px; cursor:pointer; transition:border-color .15s, background .15s;
+}
+.rental-card:last-child { margin-bottom:0; }
+.rental-card:hover { border-color:#334155; background:#111827; }
+.rental-card.active { border-color:#6366f1; background:#1e1b4b22; }
+
+.rental-card-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:6px; }
+.rental-name { font-size:.88rem; font-weight:700; color:#e2e8f0; }
+.rental-detail { font-size:.75rem; color:#64748b; margin-top:2px; }
+.rental-price { font-size:1rem; font-weight:800; }
+.rental-per-mo { font-size:.68rem; color:#64748b; }
+
+.rental-card-bottom { display:flex; justify-content:space-between; align-items:center; }
+.rental-platform-badge {
+  font-size:.68rem; padding:2px 7px; border-radius:4px; font-weight:600;
+  background:#172554; color:#93c5fd; border:1px solid #1e40af;
+}
+.rental-link {
+  font-size:.78rem; font-weight:600; color:#6366f1; text-decoration:none;
+}
+.rental-link:hover { color:#818cf8; text-decoration:underline; }

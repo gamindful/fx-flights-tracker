@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Euro &amp; Vuelos · MEX → Berlín</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Euro &amp; Vuelos <span>AICM → Berlín</span></h1>
+    <div class="header-right">
+      <span id="last-updated">Cargando...</span>
+      <label style="font-size:.75rem;color:#64748b">Cada</label>
+      <select id="refresh-interval">
+        <option value="15">15 min</option>
+        <option value="30" selected>30 min</option>
+        <option value="60">60 min</option>
+        <option value="0">Manual</option>
+      </select>
+      <button id="refresh-btn">↻ Actualizar</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ── Left column ─────────────────────────────────────────────────── -->
+    <div>
+      <!-- Rate banner -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="font-size:.7rem;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">
+          EURO / PESO MEXICANO
+        </div>
+        <div class="rate-banner">
+          <span id="current-rate" class="rate-value">—</span>
+          <span class="rate-pair">MXN</span>
+        </div>
+        <span id="rate-change" class="rate-change">—</span>
+        <span id="rate-change-pct" style="font-size:.75rem;color:#64748b;margin-left:6px"></span>
+      </div>
+
+      <!-- Forecast chart -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Pronóstico EUR/MXN</div>
+        <div class="card-subtitle">Modelo entrenado 2003–2019 · excluye 2020–2024</div>
+        <canvas id="forecast-chart"></canvas>
+        <div class="chart-legend">
+          <span><span class="legend-line" style="background:#3b82f6"></span>Histórico (2003–2019)</span>
+          <span><span class="legend-line" style="background:none;border-top:2px dashed #fb923c;width:18px"></span>Pronóstico del modelo</span>
+          <span><span class="legend-line" style="background:none;border-top:2px dashed #64748b;width:18px"></span>Real 2020–2024</span>
+          <span><span class="legend-dot" style="background:rgba(251,146,60,.3);border-radius:2px;width:14px;height:10px"></span>Intervalo de confianza</span>
+        </div>
+      </div>
+
+      <!-- Banks table -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:10px">Bancos y casas de cambio · EUR/MXN</div>
+        <table class="banks-table">
+          <thead>
+            <tr>
+              <th>Institución</th><th>Compra</th><th>Venta</th><th>Spread</th>
+            </tr>
+          </thead>
+          <tbody id="banks-tbody">
+            <tr><td colspan="4" style="color:#475569;text-align:center;padding:16px">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Right column ────────────────────────────────────────────────── -->
+    <div>
+      <!-- Flight price chart -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">Precios de Vuelos MEX → Berlín</div>
+        <div class="card-subtitle">Media mensual + rango histórico 2022–2025 · clic en mes para ver aerolíneas</div>
+        <div class="dest-tabs">
+          <button class="dest-tab active" data-dest="BER">BER</button>
+          <button class="dest-tab" data-dest="HAM">HAM</button>
+          <button class="dest-tab" data-dest="HAJ">HAJ</button>
+          <button class="dest-tab" data-dest="DRS">DRS</button>
+        </div>
+        <canvas id="price-chart"></canvas>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:rgba(99,102,241,.3);border-radius:2px;width:14px;height:10px"></span>Rango histórico</span>
+          <span><span class="legend-dot" style="background:#6366f1"></span>Media histórica</span>
+          <span><span class="legend-dot" style="background:#f97316"></span>Año actual</span>
+          <span><span class="legend-dot" style="background:#facc15"></span>Mes seleccionado</span>
+        </div>
+      </div>
+
+      <!-- Airlines -->
+      <div class="card" style="margin-bottom:16px">
+        <div id="airlines-title" style="font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:2px">
+          MEX → Berlin Brandenburg
+        </div>
+        <div id="airlines-subtitle" style="font-size:.75rem;color:#64748b;margin-bottom:10px"></div>
+        <div class="date-row">
+          <label for="flight-date">Fecha:</label>
+          <input type="date" id="flight-date" />
+          <span id="price-source-badge" class="source-badge estimate">Estimado</span>
+        </div>
+        <div id="airlines-list">
+          <p style="color:#475569;font-size:.8rem;padding:12px 0">Cargando...</p>
+        </div>
+      </div>
+
+      <!-- ── Rentals map panel ─────────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-title">Rentas en Berlín</div>
+        <div class="card-subtitle">Departamentos disponibles · precios en € / mes · clic en marcador para detalles</div>
+
+        <!-- Price filter -->
+        <div class="rental-filters">
+          <button class="rental-filter-btn active" data-max="99999">Todos</button>
+          <button class="rental-filter-btn" data-max="1200">≤ €1,200</button>
+          <button class="rental-filter-btn" data-min="1200" data-max="1800">€1,200–1,800</button>
+          <button class="rental-filter-btn" data-min="1800">€1,800+</button>
+        </div>
+
+        <!-- Legend -->
+        <div class="rental-legend">
+          <span><span class="rental-legend-dot" style="background:#22c55e"></span>≤ €1,200</span>
+          <span><span class="rental-legend-dot" style="background:#facc15"></span>€1,200–1,800</span>
+          <span><span class="rental-legend-dot" style="background:#f97316"></span>€1,800–2,400</span>
+          <span><span class="rental-legend-dot" style="background:#ef4444"></span>&gt; €2,400</span>
+        </div>
+
+        <!-- Map -->
+        <div id="rentals-map"></div>
+
+        <!-- Listing cards -->
+        <div style="font-size:.78rem;color:#64748b;margin-bottom:8px">
+          <span id="rentals-count"></span> propiedades
+        </div>
+        <div id="rentals-list"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/demo-data.js"></script>
+  <script src="js/exchange.js"></script>
+  <script src="js/flights.js"></script>
+  <script src="js/rentals.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
