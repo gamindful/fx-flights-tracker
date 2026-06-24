@@ -45,7 +45,7 @@ def _synthetic_eurmxn() -> pd.DataFrame:
             rows.append({"date": cur, "close": round(val + noise, 4)})
             cur += relativedelta(months=1)
     df = pd.DataFrame(rows)
-    df["date"] = pd.to_datetime(df["date"])
+    df = df.assign(date=pd.to_datetime(df["date"]))
     return df.sort_values("date").reset_index(drop=True)
 
 
