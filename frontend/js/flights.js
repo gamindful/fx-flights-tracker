@@ -118,9 +118,11 @@ function renderAirlinesList(airlines, dest, dateStr, source) {
   if(!list) return;
   if(!airlines.length){list.innerHTML='<p style="color:#475569;font-size:.8rem;padding:12px 0">Sin resultados</p>';return;}
   const minPrice=Math.min(...airlines.map(a=>a.price_mxn));
+  const kayakBase=`https://www.kayak.com/flights/MEX-${dest}/${dateStr||new Date().toISOString().slice(0,10)}`;
   list.innerHTML=airlines.map((a,i)=>{
     const best=a.price_mxn===minPrice;
     const flag=AIRLINE_FLAGS[a.code]||"✈️";
+    const kayakUrl=`${kayakBase}?fs=airlines=${a.code}`;
     return `<div class="airline-simple-row">
       <span class="rank-badge${best?' best':''}">${i+1}°</span>
       <span class="airline-flag">${flag}</span>
@@ -128,7 +130,10 @@ function renderAirlinesList(airlines, dest, dateStr, source) {
         <div><span class="airline-name">${a.airline}</span><span class="airline-code">${a.code}</span></div>
         <div class="airline-via">vía ${a.via} · ${a.duration} · ${a.stops} escala</div>
       </div>
-      <span class="price-pill ${best?'price-best':'price-normal'}">$${a.price_mxn.toLocaleString("es-MX")}</span>
+      <div class="airline-price-col">
+        <span class="price-pill ${best?'price-best':'price-normal'}">$${a.price_mxn.toLocaleString("es-MX")}</span>
+        <a href="${kayakUrl}" target="_blank" rel="noopener" class="airline-link">Ver vuelo →</a>
+      </div>
     </div>`;
   }).join("");
 }
