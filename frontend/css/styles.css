@@ -117,14 +117,16 @@ input[type="date"]#flight-date {
 .leaflet-popup-tip { background:#1e293b; }
 .leaflet-popup-content { margin:10px 14px; color:#e2e8f0; }
 
-/* Rental filter tabs */
-.rental-filters { display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
-.rental-filter-btn {
+/* Rental filter groups */
+.rental-filter-group { display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+.rental-filter-btn, .rental-cat-btn {
   padding:4px 12px; border-radius:20px; border:1px solid #334155;
   background:transparent; color:#64748b; font-size:.75rem; font-weight:600; cursor:pointer; transition:all .15s;
 }
 .rental-filter-btn:hover { border-color:#6366f1; color:#c7d2fe; }
 .rental-filter-btn.active { background:#1e1b4b; border-color:#6366f1; color:#a5b4fc; }
+.rental-cat-btn:hover { border-color:#0d9488; color:#5eead4; }
+.rental-cat-btn.active { background:#042f2e; border-color:#0d9488; color:#5eead4; }
 
 /* Rental price legend */
 .rental-legend { display:flex; gap:14px; margin-bottom:10px; flex-wrap:wrap; }
@@ -165,3 +167,18 @@ input[type="date"]#flight-date {
   font-size:.78rem; font-weight:600; color:#6366f1; text-decoration:none;
 }
 .rental-link:hover { color:#818cf8; text-decoration:underline; }
+
+/* Category badge on rental cards */
+.rental-cat-badge {
+  font-size:.65rem; padding:1px 6px; border-radius:3px; font-weight:600; flex-shrink:0;
+}
+.rental-cat-badge--room { background:#042f2e; color:#6ee7b7; border:1px solid #065f46; }
+.rental-cat-badge--flat { background:#1e1b4b; color:#a5b4fc; border:1px solid #312e81; }
+
+/* Viewport count bar */
+.rentals-count-bar {
+  font-size:.78rem; color:#64748b; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+}
+.rentals-count-bar #rentals-count { color:#94a3b8; font-weight:600; }
+.viewport-hint { font-size:.72rem; color:#475569; font-style:italic; }
